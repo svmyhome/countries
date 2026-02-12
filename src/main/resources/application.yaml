@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: countries
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/countries'
+    username: postgres
+    password: secret
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 10
+      maximum-pool-size: 30
+      idle-timeout: 10000
+      max-lifetime: 1000
+      auto-commit: true
+      schema: countries
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: countries
+    locations: classpath:db/migration/countries
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+server:
+  port: 8383

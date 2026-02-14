@@ -7,6 +7,8 @@ public interface CountryService {
 
     List<Country> allCountries();
 
+    Country findById(String id);
+
     Country addCountry(Country country);
 
     Country updateCountry(String code, Country country);

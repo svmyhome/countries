@@ -2,9 +2,11 @@ package my.com.countries.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 import my.com.countries.date.CountryEntity;
 import my.com.countries.date.CountryRepository;
 import my.com.countries.domain.Country;
+import my.com.countries.ex.CountryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +34,19 @@ public class DbCountryService implements CountryService {
     }
 
     @Override
+    public Country findById(String id) {
+        return countryRepository.findById(UUID.fromString(id))
+                .map(c -> new Country(
+                        c.getName(),
+                        c.getCode(),
+                        c.getCoordinates()!=null ? new String(c.getCoordinates()):""
+                )).orElseThrow(CountryNotFoundException::new);
+    }
+
+    @Override
     public Country addCountry(Country country) {
         if (!countryRepository.existsByCodeIgnoreCase(country.code())) {
-            return Country.fromEntyty(countryRepository.save(CountryEntity.fromJson(country)));
+            return Country.fromEntity(countryRepository.save(CountryEntity.fromJson(country)));
         } else throw new IllegalArgumentException("Country exists");
     }
 
@@ -46,7 +58,7 @@ public class DbCountryService implements CountryService {
                     e.setName(country.name());
                     e.setCoordinates(country.coordinates());
                     CountryEntity savedEntity = countryRepository.save(e);
-                    return Country.fromEntyty(savedEntity);
+                    return Country.fromEntity(savedEntity);
                 })
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Country with code " + code + " not found"

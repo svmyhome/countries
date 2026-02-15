@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/country")
+@RequestMapping("api/countries")
 public class CountryController {
 
     private final CountryService countryService;
@@ -36,7 +36,7 @@ public class CountryController {
         return countryService.allCountries();
     }
 
-    @PostMapping("/add")
+    @PostMapping("")
     public Country addCountry(@RequestBody Country country) {
         return countryService.addCountry(country);
     }

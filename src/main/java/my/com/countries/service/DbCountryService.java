@@ -24,15 +24,12 @@ public class DbCountryService implements CountryService {
 
     @Override
     public List<Country> allCountries() {
-        return countryRepository.findAll()
-                .stream()
-                .map(c -> {
-                    return new Country(
-                            c.getName(),
-                            c.getCode(),
-                            c.getCoordinates()
-                    );
-                }).toList();
+        return allCountriesGql().stream()
+                .map(c -> new Country(
+                        c.name(),
+                        c.code(),
+                        c.coordinates()
+                )).toList();
     }
 
     @Override
@@ -51,12 +48,7 @@ public class DbCountryService implements CountryService {
 
     @Override
     public Country findById(String id) {
-        return countryRepository.findById(UUID.fromString(id))
-                .map(c -> new Country(
-                        c.getName(),
-                        c.getCode(),
-                        c.getCoordinates()!=null ? new String(c.getCoordinates()):""
-                )).orElseThrow(CountryNotFoundException::new);
+        return Country.fromCountryGql(countyGqlById(id));
     }
 
     @Override
@@ -85,13 +77,8 @@ public class DbCountryService implements CountryService {
             ce.setCode(country.code());
             ce.setCoordinates(country.coordinates());
             CountryEntity saved = countryRepository.save(ce);
+            return CountryGql.fromEntity(saved);
 
-            return new CountryGql(
-                    saved.getId(),
-                    saved.getName(),
-                    saved.getCode(),
-                    saved.getCoordinates()
-            );
         } else throw new IllegalArgumentException("Country exists");
     }
 
@@ -119,12 +106,7 @@ public class DbCountryService implements CountryService {
                     e.setName(country.name());
                     e.setCoordinates(country.coordinates());
                     CountryEntity saved = countryRepository.save(e);
-                    return new CountryGql(
-                            saved.getId(),
-                            saved.getName(),
-                            saved.getCode(),
-                            saved.getCoordinates()
-                    );
+                    return CountryGql.fromEntity(saved);
                 })
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Country with code " + code + " not found"

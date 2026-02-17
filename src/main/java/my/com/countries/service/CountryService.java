@@ -5,12 +5,14 @@ import java.util.List;
 import my.com.countries.domain.Country;
 import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.domain.graphql.CountryInputGql;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface CountryService {
 
     List<Country> allCountries();
 
-    List<CountryGql> allCountriesGql();
+    Slice<CountryGql> allCountriesGql(Pageable pageable);
 
     Country findById(String id);
 

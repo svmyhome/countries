@@ -10,6 +10,8 @@ import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.domain.graphql.CountryInputGql;
 import my.com.countries.ex.CountryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,15 +26,21 @@ public class DbCountryService implements CountryService {
 
     @Override
     public List<Country> allCountries() {
-        return allCountriesGql().stream()
-                .map(Country::fromCountryGql).toList();
+        return countryRepository.findAll()
+                .stream()
+                .map(c -> {
+                    return new Country(
+                            c.getName(),
+                            c.getCode(),
+                            c.getCoordinates()
+                    );
+                }).toList();
     }
 
     @Override
-    public List<CountryGql> allCountriesGql() {
-        return countryRepository.findAll()
-                .stream()
-                .map(CountryGql::fromEntity).toList();
+    public Page<CountryGql> allCountriesGql(Pageable pageable) {
+        return countryRepository.findAll(pageable)
+                .map(CountryGql::fromEntity);
     }
 
     @Override

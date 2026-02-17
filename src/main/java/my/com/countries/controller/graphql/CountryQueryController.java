@@ -1,9 +1,10 @@
 package my.com.countries.controller.graphql;
 
-import java.util.List;
 import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,12 @@ public class CountryQueryController {
     }
 
     @QueryMapping
-    List<CountryGql> countries() {
-        return countryService.allCountriesGql();
+    Slice<CountryGql> countries(@Argument int page, @Argument int size) {
+        return countryService.allCountriesGql(
+                PageRequest.of(
+                        page,
+                        size
+                )
+        );
     }
 }

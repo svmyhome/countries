@@ -62,3 +62,29 @@ mutation updateCountry($code: String!, $name: String!, $coordinates: String) {
   "coordinates": "[cks nckjsdncjns22dkjn1]"
 }
 ```
+**Запроса с пагинацией**
+```graphql
+query Countries($page:Int!, $size:Int!) {
+    countries(page: $page, size: $size) {
+        edges {
+            node {
+                id,
+                name,
+                code,
+                coordinates
+            }
+        }
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+        }
+    }
+}
+```
+**тело запроса**
+```json
+{
+  "page": 0,
+  "size": 3
+}
+```

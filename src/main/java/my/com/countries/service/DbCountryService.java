@@ -25,25 +25,14 @@ public class DbCountryService implements CountryService {
     @Override
     public List<Country> allCountries() {
         return allCountriesGql().stream()
-                .map(c -> new Country(
-                        c.name(),
-                        c.code(),
-                        c.coordinates()
-                )).toList();
+                .map(Country::fromCountryGql).toList();
     }
 
     @Override
     public List<CountryGql> allCountriesGql() {
         return countryRepository.findAll()
                 .stream()
-                .map(c -> {
-                    return new CountryGql(
-                            c.getId(),
-                            c.getName(),
-                            c.getCode(),
-                            c.getCoordinates()
-                    );
-                }).toList();
+                .map(CountryGql::fromEntity).toList();
     }
 
     @Override
@@ -54,12 +43,7 @@ public class DbCountryService implements CountryService {
     @Override
     public CountryGql countyGqlById(String id) {
         return countryRepository.findById(UUID.fromString(id))
-                .map(c -> new CountryGql(
-                        c.getId(),
-                        c.getName(),
-                        c.getCode(),
-                        c.getCoordinates()!=null ? new String(c.getCoordinates()):""
-                )).orElseThrow(CountryNotFoundException::new);
+                .map(CountryGql::fromEntity).orElseThrow(CountryNotFoundException::new);
     }
 
     @Override

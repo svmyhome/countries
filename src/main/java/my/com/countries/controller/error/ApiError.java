@@ -60,19 +60,19 @@ public class ApiError {
         );
     }
 
-    private record Error(String code, String message, List<ErrorItems> errors) {
-
-    }
-
-    private record ErrorItems(String domain, String reason, String message) {
-
-    }
-
     public String getApiVersion() {
         return apiVersion;
     }
 
     public Error getError() {
         return error;
+    }
+
+    private record Error(String code, String message, List<ErrorItems> errors) {
+
+    }
+
+    private record ErrorItems(String domain, String reason, String message) {
+
     }
 }

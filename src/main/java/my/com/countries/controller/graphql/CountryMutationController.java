@@ -1,6 +1,5 @@
 package my.com.countries.controller.graphql;
 
-import my.com.countries.domain.Country;
 import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.domain.graphql.CountryInputGql;
 import my.com.countries.service.CountryService;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class CountryMutationController {

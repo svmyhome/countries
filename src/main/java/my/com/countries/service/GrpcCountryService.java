@@ -1,6 +1,7 @@
 package my.com.countries.service;
 
 import io.grpc.stub.StreamObserver;
+import java.util.List;
 import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.domain.graphql.CountryInputGql;
 import my.com.grpc.countries.CounterRequest;
@@ -38,7 +39,18 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
 
     @Override
     public void countries(CounterRequest request, StreamObserver<CountryResponse> responseObserver) {
-
+        List<CountryGql> countries = countryService.allCountriesGql();
+        for (int i = 0; i < request.getCounter(); i++) {
+            responseObserver.onNext(
+                    CountryResponse.newBuilder()
+                            .setId(countries.get(i).id().toString())
+                            .setName(countries.get(i).name())
+                            .setCode(countries.get(i).code())
+                            .setCoordinates(countries.get(i).coordinates())
+                            .build()
+            );
+        }
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -61,6 +73,17 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
 
     @Override
     public void updateCountry(CountryUpdate request, StreamObserver<CountryResponse> responseObserver) {
-        super.updateCountry(request, responseObserver);
+        final CountryInputGql countryInputGql = new CountryInputGql(
+                request.getInput().getName(), request.getInput().getCode(), request.getInput().getCoordinates());
+        CountryGql updateCountryGql = countryService.updateCountryGql(request.getCode(), countryInputGql);
+        responseObserver.onNext(
+                CountryResponse.newBuilder()
+                        .setId(updateCountryGql.id().toString())
+                        .setName(updateCountryGql.name())
+                        .setCode(updateCountryGql.code())
+                        .setCoordinates(updateCountryGql.coordinates())
+                        .build()
+        );
+        responseObserver.onCompleted();
     }
 }

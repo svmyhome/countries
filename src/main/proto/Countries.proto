@@ -28,6 +28,7 @@ message CountryUpdate {
   string code = 1;
   CountryRequest input = 2;
 }
+
 message CountryRequest {
   string name = 1;
   string code = 2;

@@ -13,6 +13,7 @@ service CountryService {
   rpc country(idRequest) returns (CountryResponse) {}
   rpc countries(CounterRequest) returns (stream CountryResponse) {}
   rpc addCountry(CountryRequest) returns (CountryResponse) {}
+  rpc addStreamCountry(stream StreamNewCountryRequest) returns (CounterRequest) {}
   rpc updateCountry(CountryUpdate) returns (CountryResponse) {}
 }
 
@@ -26,6 +27,11 @@ message CounterRequest {
 
 message CountryUpdate {
   string code = 1;
+  CountryRequest input = 2;
+}
+
+message StreamNewCountryRequest {
+  string count = 1;
   CountryRequest input = 2;
 }
 

@@ -10,11 +10,11 @@ option java_package = "my.com.grpc.countries";
 option java_outer_classname = "CountriesProto";
 
 service CountryService {
-  rpc country(idRequest) returns (CountryResponse) {}
-  rpc countries(CounterRequest) returns (stream CountryResponse) {}
-  rpc addCountry(CountryRequest) returns (CountryResponse) {}
-  rpc addStreamCountry(stream StreamNewCountryRequest) returns (CounterRequest) {}
-  rpc updateCountry(CountryUpdate) returns (CountryResponse) {}
+  rpc GetCountry(idRequest) returns (CountryResponse) {}
+  rpc ListCountries(CounterRequest) returns (stream CountryResponse) {}
+  rpc CreateCountry(CreateCountryRequest) returns (CountryResponse) {}
+  rpc CreateStreamCountry(stream CreateStreamCountryRequest) returns (CounterRequest) {}
+  rpc UpdateCountry(UpdateCountryRequest) returns (CountryResponse) {}
 }
 
 message idRequest {
@@ -25,17 +25,17 @@ message CounterRequest {
   uint32 counter = 1;
 }
 
-message CountryUpdate {
+message UpdateCountryRequest {
   string code = 1;
-  CountryRequest input = 2;
+  CreateCountryRequest input = 2;
 }
 
-message StreamNewCountryRequest {
+message CreateStreamCountryRequest {
   string count = 1;
-  CountryRequest input = 2;
+  CreateCountryRequest input = 2;
 }
 
-message CountryRequest {
+message CreateCountryRequest {
   string name = 1;
   string code = 2;
   string coordinates = 3;

@@ -5,11 +5,11 @@ import java.util.List;
 import my.com.countries.domain.graphql.CountryGql;
 import my.com.countries.domain.graphql.CountryInputGql;
 import my.com.grpc.countries.CounterRequest;
-import my.com.grpc.countries.CountryRequest;
 import my.com.grpc.countries.CountryResponse;
 import my.com.grpc.countries.CountryServiceGrpc;
-import my.com.grpc.countries.CountryUpdate;
-import my.com.grpc.countries.StreamNewCountryRequest;
+import my.com.grpc.countries.CreateCountryRequest;
+import my.com.grpc.countries.CreateStreamCountryRequest;
+import my.com.grpc.countries.UpdateCountryRequest;
 import my.com.grpc.countries.idRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
     }
 
     @Override
-    public void country(idRequest request, StreamObserver<CountryResponse> responseObserver) {
+    public void getCountry(idRequest request, StreamObserver<CountryResponse> responseObserver) {
         final CountryGql countryGql = countryService.countyGqlById(request.getId());
         responseObserver.onNext(
                 CountryResponse.newBuilder()
@@ -39,7 +39,7 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
     }
 
     @Override
-    public void countries(CounterRequest request, StreamObserver<CountryResponse> responseObserver) {
+    public void listCountries(CounterRequest request, StreamObserver<CountryResponse> responseObserver) {
         List<CountryGql> countries = countryService.allCountriesGql();
         for (int i = 0; i < request.getCounter(); i++) {
             responseObserver.onNext(
@@ -55,7 +55,7 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
     }
 
     @Override
-    public void addCountry(CountryRequest request, StreamObserver<CountryResponse> responseObserver) {
+    public void createCountry(CreateCountryRequest request, StreamObserver<CountryResponse> responseObserver) {
         final CountryGql countryGql = countryService.addCountryGql(new CountryInputGql(
                 request.getName(),
                 request.getCode(),
@@ -73,13 +73,13 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
     }
 
     @Override
-    public StreamObserver<StreamNewCountryRequest> addStreamCountry(StreamObserver<CounterRequest> responseObserver) {
-        return new StreamObserver<StreamNewCountryRequest>() {
+    public StreamObserver<CreateStreamCountryRequest> createStreamCountry(StreamObserver<CounterRequest> responseObserver) {
+        return new StreamObserver<CreateStreamCountryRequest>() {
             private int count = 0;
 
             @Override
-            public void onNext(StreamNewCountryRequest request) {
-                CountryRequest countryRequest = request.getInput();
+            public void onNext(CreateStreamCountryRequest request) {
+                CreateCountryRequest countryRequest = request.getInput();
 
                 try {
                     countryService.addCountryGql(new CountryInputGql(
@@ -118,7 +118,7 @@ public class GrpcCountryService extends CountryServiceGrpc.CountryServiceImplBas
     }
 
     @Override
-    public void updateCountry(CountryUpdate request, StreamObserver<CountryResponse> responseObserver) {
+    public void updateCountry(UpdateCountryRequest request, StreamObserver<CountryResponse> responseObserver) {
         final CountryInputGql countryInputGql = new CountryInputGql(
                 request.getInput().getName(), request.getInput().getCode(), request.getInput().getCoordinates());
         CountryGql updateCountryGql = countryService.updateCountryGql(request.getCode(), countryInputGql);

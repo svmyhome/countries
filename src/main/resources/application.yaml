@@ -36,3 +36,6 @@ server:
 
 api:
   version: V1.0
+
+countries:
+  base-uri: 'http://localhost:8383'

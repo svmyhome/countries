@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.10'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.github.edeandrea.xjc-generation' version '1.6'
 }
 
 group = 'my.com'
@@ -21,6 +22,9 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation('org.springframework.boot:spring-boot-starter-web-services') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
 	implementation 'org.flywaydb:flyway-core:11.13.1'
 	implementation 'org.flywaydb:flyway-database-postgresql:11.13.1'
 	implementation 'org.springframework.boot:spring-boot-starter-graphql'
@@ -29,8 +33,31 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'org.postgresql:postgresql:42.7.7'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	xjc 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
+	implementation 'wsdl4j:wsdl4j:1.6.3'
 }
 
+xjcGeneration {
+	defaultAdditionalXjcOptions = ['encoding': 'UTF-8']
+	schemas {
+		wsdlSchema {
+			schemaRootDir = "$projectDir/src/main/resources"
+			schemaFile = 'countries.xsd'
+			javaPackageName = 'my.com.countries'
+			sourceSet = 'main'
+		}
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir('src/main/java')
+			srcDir("$buildDir/generated-sources/main/xjc")
+		}
+	}
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }

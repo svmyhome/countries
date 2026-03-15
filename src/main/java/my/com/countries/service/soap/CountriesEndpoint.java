@@ -56,12 +56,12 @@ public class CountriesEndpoint {
         countriesResponse.setTotalElements(country.getTotalElements());
         countriesResponse.getCountries().addAll(
                 country.getContent().stream().map(
-                        gqlCountry -> {
+                        gqlPhoto -> {
                             Country xmlCountry = new Country();
-                            xmlCountry.setId(xmlCountry.getId());
-                            xmlCountry.setName(xmlCountry.getName());
-                            xmlCountry.setCode(xmlCountry.getCode());
-                            xmlCountry.setCoordinates(xmlCountry.getCoordinates());
+                            xmlCountry.setId(gqlPhoto.id().toString());
+                            xmlCountry.setName(gqlPhoto.name());
+                            xmlCountry.setCode(gqlPhoto.code());
+                            xmlCountry.setCoordinates(gqlPhoto.coordinates());
                             return xmlCountry;
                         }
                 ).toList()

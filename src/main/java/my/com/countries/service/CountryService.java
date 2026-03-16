@@ -14,6 +14,8 @@ public interface CountryService {
 
     Slice<CountryGql> allCountriesGql(Pageable pageable);
 
+    List<CountryGql> allCountriesGql();
+
     Country findById(String id);
 
     CountryGql countyGqlById(String id);

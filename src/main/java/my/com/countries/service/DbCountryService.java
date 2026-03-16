@@ -44,6 +44,12 @@ public class DbCountryService implements CountryService {
     }
 
     @Override
+    public List<CountryGql> allCountriesGql() {
+        return countryRepository.findAll().stream()
+                .map(CountryGql::fromEntity).toList();
+    }
+
+    @Override
     public Country findById(String id) {
         return Country.fromCountryGql(countyGqlById(id));
     }

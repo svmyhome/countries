@@ -1,7 +1,6 @@
 package my.com.countries.service.soap;
 
 
-
 import static my.com.countries.config.ApiConfig.SOAP_NAMESPACE;
 import my.com.countries.CountriesResponse;
 import my.com.countries.Country;
